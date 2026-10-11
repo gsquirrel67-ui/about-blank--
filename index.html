@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Home- Classroom Games</title>
+<style>
+:root{color-scheme:dark;--bg:#070b16;--panel:#10182a;--line:#24314b;--muted:#91a0b9;--green:#34d399;--purple:#a78bfa}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#13203b 0,#070b16 55%);color:#eef4ff;font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:3;background:#080d19ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.bar{max-width:1100px;margin:auto;padding:16px 22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.logo{height:40px;width:40px;border-radius:13px;background:var(--green);color:#07110f;display:grid;place-items:center;font-size:22px}
+h1{font-size:18px;margin:0} .sub{font-size:12px;color:var(--muted)}.search{margin-left:auto;min-width:190px;max-width:300px;flex:1}
+input,textarea,select{width:100%;background:#080f20;color:#f4f7ff;border:1px solid #2b3955;border-radius:10px;padding:11px 12px;font:inherit;outline:none}input:focus,textarea:focus{border-color:var(--green)}
+main{max-width:1100px;margin:auto;padding:26px 22px 60px}.section-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 14px}.section-head h2{font-size:16px;margin:0}.muted{color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}.card,.panel{border:1px solid var(--line);background:linear-gradient(150deg,#111b30ee,#0d1424ee);border-radius:17px;padding:16px;min-width:0}.card{transition:.18s;display:flex;flex-direction:column;gap:9px}.card:hover{border-color:#4a668a;transform:translateY(-2px)}.icon{width:42px;height:42px;border-radius:12px;background:#1c2a41;color:var(--green);display:grid;place-items:center;font-size:22px}.card h3{font-size:14px;margin:0;overflow-wrap:anywhere}.card p{font-size:12px;color:var(--muted);margin:0;overflow-wrap:anywhere}.actions{display:flex;gap:8px;margin-top:auto;padding-top:8px}button,.button{border:1px solid #34435e;background:#18243a;color:#f4f7ff;border-radius:10px;padding:9px 12px;font:inherit;cursor:pointer}button:hover,.button:hover{filter:brightness(1.2)}.primary{background:var(--green);border-color:var(--green);color:#07120f;font-weight:700}.purple{background:#8b5cf6;border-color:#8b5cf6;color:white}.danger{color:#fca5a5}.wide{width:100%}.panel{margin-bottom:25px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .full{grid-column:1/-1}label{display:block;font-size:12px;color:#a9b7ce;margin-bottom:5px}.panel h2{font-size:15px;margin:0 0 14px}.hidden{display:none!important}.empty{border:1px dashed var(--line);padding:35px;text-align:center;border-radius:16px;color:var(--muted)}.status{margin-top:10px;color:#fbbf24;font-size:12px}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar button{font-size:12px}.player{position:fixed;inset:0;z-index:10;background:#050814;display:flex;flex-direction:column}.playerbar{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--line)}.player iframe{width:100%;flex:1;border:0;background:white}.notice{color:var(--muted);font-size:12px;margin-top:12px}footer{max-width:1100px;margin:auto;padding:0 22px 28px;color:#64748b;font-size:11px}
+@media(max-width:600px){.bar{padding:13px 15px}.search{order:3;max-width:none;flex-basis:100%;margin:0}main{padding:20px 15px 40px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}}
+</style>
+</head>
+<body>
+<header><div class="bar"><div class="logo">⌂</div><div><h1>Home- Classroom</h1><div class="sub">A simple home for your HTML games</div></div><div class="search"><input id="search" placeholder="Search games…" aria-label="Search sites and games"></div></div></header>
+<main>
+<section style="margin-top:28px">
+ <div class="section-head"><h2>🎮 Games</h2><span id="gameCount" class="muted">0 added</span></div>
+ <div class="panel">
+  <h2>Add a game using its HTML code</h2>
+  <form id="gameForm" class="form-grid">
+   <div><label for="gameName">Game name</label><input id="gameName" placeholder="Snake" required maxlength="80"></div>
+   <div><label for="gameDesc">Description (optional)</label><input id="gameDesc" placeholder="Classic arcade game"></div>
+   <div class="full"><label for="gameHtml">HTML code</label><textarea id="gameHtml" rows="6" placeholder="Paste your own game's HTML here…" required></textarea></div>
+   <div class="full"><button class="purple" type="submit">Save game</button></div>
+  </form><div class="notice">Games are stored locally in this browser. Only add HTML you trust; games run in a sandbox.</div>
+ </div>
+ <div id="games" class="grid"></div><div id="gamesEmpty" class="empty hidden">No games yet — add one above with its HTML code.</div>
+</section>
+<section class="panel" style="margin-top:28px">
+ <div class="section-head"><h2>🔐 Admin controls</h2><span id="lockStatus" class="muted">Games unlocked</span></div>
+ <p class="notice" style="margin-top:0">Enter the admin password to lock or unlock adding and deleting games in this browser.</p>
+ <form id="adminForm" class="form-grid">
+  <div><label for="adminPassword">Admin password</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Enter admin password" required></div>
+  <div style="display:flex;align-items:end"><button class="primary wide" type="submit">Unlock admin controls</button></div>
+ </form>
+ <div id="adminActions" class="toolbar hidden" style="margin-top:12px">
+  <button id="toggleLock" class="danger" type="button">Lock game changes</button>
+  <button id="adminLogout" type="button">Log out</button>
+ </div>
+ <p id="adminMessage" class="status" role="status"></p>
+</section>
+
+<section class="panel" style="margin-top:28px">
+ <div class="section-head"><h2>Settings</h2></div>
+ <div class="toolbar"><button id="exportBtn">Export backup</button><button id="importBtn">Import backup</button><input id="importFile" type="file" accept="application/json" class="hidden"><button id="clearBtn" class="danger">Clear local games</button></div>
+ <p class="notice">To share saved sites and games with everyone, this site needs a hosted database and user permissions. This standalone version is ready to test and publish as a static website.</p>
+</section>
+</main>
+<footer>Home- Classroom · Use websites and games in line with your school’s rules.</footer>
+<div id="player" class="player hidden"><div class="playerbar"><button id="backBtn">← Back</button><strong id="playerTitle">Game</strong><span class="muted" style="margin-left:auto">Sandboxed game</span></div><iframe id="gameFrame" title="Game player" sandbox="allow-scripts allow-pointer-lock" allow="fullscreen"></iframe></div>
+<script>
+const $=id=>document.getElementById(id);
+const KEY='home-classroom-v1';
+const LOCK_KEY='home-classroom-games-locked';
+const ADMIN_PASSWORD='rip james';
+let adminSession=false;
+let gamesLocked=localStorage.getItem(LOCK_KEY)==='true';
+let data={games:[]};
+try{const saved=JSON.parse(localStorage.getItem(KEY)||'{}');data.games=Array.isArray(saved.games)?saved.games:[]}catch{}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{alert('Browser storage is full. Export a backup or remove some games.')}} 
+function normalizeUrl(value){const u=new URL(value);if(!['http:','https:'].includes(u.protocol))throw Error('Use an http or https website URL.');return u.href}
+function syncAdminUI(){
+ $('lockStatus').textContent=gamesLocked?'Games locked':'Games unlocked';
+ $('adminActions').classList.toggle('hidden',!adminSession);
+ $('gameForm').classList.toggle('hidden',gamesLocked||!adminSession);
+ $('gameForm').querySelector('button[type="submit"]').disabled=gamesLocked||!adminSession;
+ $('adminForm').querySelector('button[type="submit"]').textContent=adminSession?'Admin controls unlocked':'Unlock admin controls';
+}
+function render(){syncAdminUI();const q=$('search').value.trim().toLowerCase();const games=data.games.filter(x=>(x.name+' '+(x.description||'')).toLowerCase().includes(q));$('gameCount').textContent=`${data.games.length} added`;$('games').innerHTML=games.map(x=>`<article class="card"><div class="icon">🎮</div><h3>${esc(x.name)}</h3><p>${esc(x.description||'HTML game')}</p><div class="actions"><button class="purple" data-play="${esc(x.id)}">Play</button>${adminSession&&!gamesLocked?`<button class="danger" data-delete-game="${esc(x.id)}" aria-label="Delete ${esc(x.name)}">×</button>`:""}</div></article>`).join('');$('gamesEmpty').classList.toggle('hidden',games.length>0)}
+$('gameForm').addEventListener('submit',e=>{e.preventDefault();const name=$('gameName').value.trim(),html=$('gameHtml').value;if(!name||!html.trim())return;data.games.unshift({id:crypto.randomUUID(),name,description:$('gameDesc').value.trim(),html});persist();e.target.reset();render()});
+$('search').addEventListener('input',render);
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.deleteGame){data.games=data.games.filter(x=>x.id!==b.dataset.deleteGame);persist();render()}if(b.dataset.play){const x=data.games.find(x=>x.id===b.dataset.play);if(x){$('playerTitle').textContent=x.name;$('gameFrame').srcdoc=x.html;$('player').classList.remove('hidden')}}});
+function closePlayer(){$('gameFrame').srcdoc='';$('player').classList.add('hidden')}$('backBtn').addEventListener('click',closePlayer);document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlayer()});
+$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='home-classroom-backup.json';a.click();URL.revokeObjectURL(a.href)});
+$('importBtn').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const x=JSON.parse(await file.text());if(!Array.isArray(x.games))throw Error();data={games:x.games.filter(v=>v&&v.name&&typeof v.html==='string').map(v=>({...v,id:v.id||crypto.randomUUID()}))};persist();render();alert('Backup imported.')}catch{alert('That backup file is not valid.')}e.target.value=''});
+$('clearBtn').addEventListener('click',()=>{if(confirm('Delete all locally saved games? This cannot be undone unless you exported a backup.')){data={games:[]};persist();render()}});
+$('adminForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const pass=$('adminPassword').value;
+ if(pass===ADMIN_PASSWORD){
+  adminSession=true;
+  $('adminMessage').textContent='Admin verified. You can now manage the game lock.';
+  $('adminMessage').style.color='#86efac';
+  $('adminPassword').value='';
+  syncAdminUI();
+ }else{
+  $('adminMessage').textContent='Incorrect password.';
+  $('adminMessage').style.color='#fca5a5';
+ }
+});
+$('toggleLock').addEventListener('click',()=>{
+ if(!adminSession){$('adminMessage').textContent='Unlock admin controls first.';return}
+ gamesLocked=!gamesLocked;
+ localStorage.setItem(LOCK_KEY,String(gamesLocked));
+ $('adminMessage').textContent=gamesLocked?'Game changes are locked in this browser.':'Game changes are unlocked in this browser.';
+ syncAdminUI();
+});
+$('adminLogout').addEventListener('click',()=>{
+ adminSession=false;
+ $('adminMessage').textContent='Logged out of admin controls.';
+ syncAdminUI();
+});
+const originalGameSubmit=$('gameForm');
+originalGameSubmit.addEventListener('submit',e=>{
+ if(gamesLocked||!adminSession){e.preventDefault();e.stopImmediatePropagation();alert('Game editing is locked. Admin access is required.')}
+},true);
+const originalDocumentClickHandler=document;
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');
+ if(!b)return;
+ if((b.dataset.deleteGame||b.dataset.play) && gamesLocked && b.dataset.deleteGame){
+  e.preventDefault();e.stopImmediatePropagation();alert('Deleting games is locked. Admin access is required.');
+ }
+},true);
+syncAdminUI();
+render();
+</script>
+</body></html>
